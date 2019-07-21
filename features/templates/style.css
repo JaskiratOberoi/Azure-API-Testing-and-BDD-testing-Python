@@ -1,0 +1,45 @@
+/* Universal Rules */
+
+body{
+    background-color: #000000;
+    color: #f1f1f1;
+}
+
+.flex_col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex_row {
+    display: flex;
+    flex-direction: row;
+}
+
+.hcenter {
+    align-content: center;
+}
+
+.vcenter {
+    justify-content: center;
+}
+
+/* Style rules for template.html */
+
+form{
+    padding: 20%;
+    margin: 5rem;
+}
+
+#StateInput {
+    margin: 2rem 2rem 2rem 0;
+    width: 30%;
+}
+
+/* Style rules for results.html */
+
+.results {
+    align-content: center;
+    justify-content: center;
+    width: 50%;
+    height: 30%;
+}
