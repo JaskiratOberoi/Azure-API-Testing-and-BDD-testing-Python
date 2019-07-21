@@ -1,14 +1,67 @@
 import requests
+import json
 
-subid = "eee987ce-8b13-4971-b0e2-43856270922f"
-access_token = """eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzEyZDMyZjhlLTY3NmMtNGM1Ni1iMTc4LTVjM2Y4MGEwNDE2Yy8iLCJpYXQiOjE1NjM1MTg0NjksIm5iZiI6MTU2MzUxODQ2OSwiZXhwIjoxNTYzNTIyMzY5LCJhaW8iOiI0MkZnWUhoZVlxL3VhSitXNkhyNDVjT1oxUWxPQUE9PSIsImFwcGlkIjoiY2EyMGFiMzEtNzQ4MS00YmYyLWI1NDMtNzY2ZWZjMmIyNDVjIiwiYXBwaWRhY3IiOiIxIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvMTJkMzJmOGUtNjc2Yy00YzU2LWIxNzgtNWMzZjgwYTA0MTZjLyIsIm9pZCI6Ijc2MGM4YzExLTY3MGQtNDhkOS05NzUyLTllNDMxMTNkODQzNyIsInN1YiI6Ijc2MGM4YzExLTY3MGQtNDhkOS05NzUyLTllNDMxMTNkODQzNyIsInRpZCI6IjEyZDMyZjhlLTY3NmMtNGM1Ni1iMTc4LTVjM2Y4MGEwNDE2YyIsInV0aSI6Il9UY19DaDIxNEVTaDM0UzJSdEVmQUEiLCJ2ZXIiOiIxLjAifQ.MYLcPyPaMtLLsZRvlUAkS4Cj_kCUjJVyH_3jH3LXaWZTVQgNOCMBsAiCssjdR9KrDV_twkIVLO4jxTv2QEZZJBxQq70_fBUhoJmze9MVFzyE3pCjE5Tt53S34hjitNGa4ik81Qs2mcv_hVHJuZbNCqFnRTQ0-nQEBXYQEgHc3NgtbjD3BiqxpmdWJXCGvteZcyxKV3X8_trLjnCo21-Ny1raTEAWzEo-sRWylMgNenTlQIn8Q0HULGSi0cA-4WCq8gecWjjcdJGFpe3EU8dZ8aw5lzP99X5_IcH-futjbKF5sxSg5eyt1dvAeW6b7NaLwI2ICL-uDr-grnY1UHoXJA"""
-url = 'https://management.azure.com/subscriptions/'+subid+'/resourcegroups?api-version=2017-05-10'
 
-headers = {'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + access_token}
+# To gain access token without postman
 
+
+def get_access_token(self):
+    authority = 'https://login.microsoftonline.com/12d32f8e-676c-4c56-b178-5c3f80a0416c/oauth2/token'
+    header = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+    }
+    params = {
+        'resource': 'https://management.azure.com/',
+        'client_id': 'ca20ab31-7481-4bf2-b543-766efc2b245c',
+        'grant_type': 'client_credentials',
+        'tenantid': '12d32f8e-676c-4c56-b178-5c3f80a0416c',
+        'client_secret': '1aRf23nYv1Y.nxnwECrZo?Tl@HSpj/=c'
+    }
+    response = requests.post(authority, data=params, headers=header)
+
+    return json.loads(response.text)['access_token']
+
+
+# Calling the Access token function and saving the generated access token into a string.
+
+access_token = get_access_token('self')
+
+# API definitions
+subId = "eee987ce-8b13-4971-b0e2-43856270922f"
+
+url = "https://management.azure.com/subscriptions?api-version=2016-06-01"
+url2 = 'https://management.azure.com/subscriptions/'+subId+'/resourcegroups?api-version=2017-05-10'
+headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token
+}
+
+# API Call using the Access token for Subscription Info API
 response = requests.get(url=url, headers=headers)
-Database = dict()
-Database = response.json()
+Database = response.json()["value"]
 
-print(Database["value"][0]["location"])
+# API Call using the Access token for Resource Groups API
+responseRG = requests.get(url=url2, headers=headers)
+ResourceG = responseRG.json()["value"]
+
+# Information received from the Resource Group API
+def resource_group_response():
+    print(responseRG)
+    for i in range(0, len(ResourceG)):
+        print("Resource Group Name : " + ResourceG[i]["name"])
+        print("Resource Group Location : " + ResourceG[i]["location"] + "\n")
+
+
+
+
+# Information received from the Sub ID API
+def print_response():
+    print(response)
+    state = input("Enter State of Subscription : ")
+    for i in range(0, len(Database)):
+        if Database[i]["state"] == state:
+            print("Display Name of Subscription : " + Database[i]["displayName"])
+            print("Subscription ID of Account : " + Database[i]["subscriptionId"])
+            print("State of the Subscription [Enabled/Disabled] : " + Database[i]["state"])
+

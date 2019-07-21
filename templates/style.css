@@ -25,10 +25,6 @@ body{
 
 /* Style rules for template.html */
 
-form{
-    padding: 20%;
-    margin: 5rem;
-}
 
 #StateInput {
     margin: 2rem 2rem 2rem 0;

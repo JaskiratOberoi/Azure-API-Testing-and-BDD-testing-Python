@@ -11,28 +11,25 @@
     <title>Azure Information</title>
 </head>
 
-<body>
+<body class="bg-dark text-white">
     <div class="container">
         <div class="container">
             <h1 class="display-3 text-center padding">Subscription Information</h1>
         </div>
-        <div class="container table-responsive align-center">
-            <table class="table table-borderless table-hover table-stripped">
+        <br>
+        <div class="container table-responsive  align-center">
+            <table class="table table-bordered table-dark table-hover table-stripped">
+                <tr class="table-primary">
+                    <th>Display Name of your subscription : </th>
+                    <th>Subscription ID of Account : </th>
+                    <th>Status of your subscription : </th>
+                </tr>
                 <tr>
-                    <thead class="thead-dark">
-                    <th>Display Name of your subscription : </th></thead>
                     <td> {{ displayName }} </td>
-                </tr>
-                <tr>
-                    <thead class="thead-dark">
-                    <th class="thead-dark">Subscription ID of Account : </th></thead>
                     <td> {{ subscriptionId }} </td>
-                </tr>
-                <tr>
-                    <thead class="thead-dark">
-                    <th class="thead-dark">Status of your subscription : </th></thead>
                     <td> {{ state }} </td>
                 </tr>
+
             </table>
         </div>
     </div>
