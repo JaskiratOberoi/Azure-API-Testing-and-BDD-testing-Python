@@ -38,6 +38,5 @@ def resource_group_response():
                            rgLocation1=ResourceG[0]["location"], rgLocation2=ResourceG[1]["location"], rgLocation3=ResourceG[2]["location"])
 
 
-
 if __name__ == '__main__':
     app.run(debug=True)
